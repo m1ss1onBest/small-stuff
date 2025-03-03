@@ -1,9 +1,10 @@
-use std::{ops::Deref, ptr::NonNull, rc::Rc};
+use std::ops::Deref;
 
 #[derive(Debug)]
 pub struct LinkedList<T> {
     length: usize,
     head: Option<Box<Node<T>>>,
+    tail: Option<*mut Node<T>>,
 }
 
 #[allow(dead_code)]
@@ -12,6 +13,7 @@ impl<T> LinkedList<T> {
         LinkedList {
             length: 0,
             head: None,
+            tail: None,
         }
     }
 
@@ -20,19 +22,19 @@ impl<T> LinkedList<T> {
     }
 
     pub fn push(&mut self, val: T) {
-        let new_val = Box::new(Node::new(val));
-
-        if let Some(mut node) = self.head.take() {
-            let mut next_node = &mut node.next;
-            while let Some(new_node) = next_node {
-                next_node = &mut new_node.next;
+        let mut new_node = Box::new(Node::new(val));
+        let new_node_ptr = &mut *new_node as *mut Node<T>;
+        
+        if self.head.is_none() {
+            self.head = Some(new_node);
+            self.tail = Some(new_node_ptr);
+        } else {
+            unsafe {
+                if let Some(tail_ptr) = self.tail {
+                    (*tail_ptr).next = Some(new_node);
+                    self.tail = Some(new_node_ptr);
+                }
             }
-            *next_node = Some(new_val);
-            self.head = Some(node);
-        }
-        //list is empty
-        else {
-            self.head = Some(new_val);
         }
         self.length += 1;
     }
@@ -64,5 +66,33 @@ impl<T> Deref for Node<T> {
 
     fn deref(&self) -> &Self::Target {
         &self.value
+    }
+}
+
+impl<T> IntoIterator for LinkedList<T> {
+    type Item = T;
+    type IntoIter = LLIntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        LLIntoIter {
+            current: self.head
+        }
+    }
+}
+
+pub struct LLIntoIter<T> {
+    current: Option<Box<Node<T>>>
+}
+
+impl<T> Iterator for LLIntoIter<T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(n) = self.current.take() {
+            let next_node = n.next;
+            self.current = next_node;
+            return Some(n.value);
+        }
+        None
     }
 }

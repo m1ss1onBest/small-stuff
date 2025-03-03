@@ -1,25 +1,37 @@
 pub mod linked_list;
 
-pub use linked_list::LinkedList;
-
 #[cfg(test)]
 mod tests {
+    use linked_list::LinkedList;
+
     use super::*;
 
     #[test]
-    fn test_empty_list() {
-        let a:  LinkedList<i32> = LinkedList::new();
+    fn test_create_empty_list() {
+        let a: LinkedList<i32> = LinkedList::new();
         assert_eq!(a.len(), 0);
     }
 
     #[test]
-    fn test_list_push() {
+    fn test_push_items_to_list() {
         let mut a = LinkedList::new();
         a.push(1);
         a.push(2);
         a.push(3);
 
+        // println!("the list\n {:#?}", a);
         assert_eq!(a.len(), 3);
-        println!("{:#?}", a);
+    }
+
+    #[test]
+    fn test_into_iter() {
+        let mut a = LinkedList::new();
+        a.push(1);
+        a.push(2);
+        a.push(3);
+
+        for i in a {
+            println!("Item of list: {}", i);
+        }
     }
 }
