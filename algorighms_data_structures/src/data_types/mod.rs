@@ -1,37 +1,33 @@
-pub mod linked_list;
+pub mod vector;
 
 #[cfg(test)]
-mod tests {
-    use linked_list::LinkedList;
+mod vector_tests {
+    use std::time::Instant;
 
-    use super::*;
+    use super::{vector::Vector, *};
 
     #[test]
-    fn test_create_empty_list() {
-        let a: LinkedList<i32> = LinkedList::new();
-        assert_eq!(a.len(), 0);
+    fn test_push() {
+        let mut a = Vector::new();
+        a.push(1);
+        a.push(1);
+        a.push(1);
+
+        println!("vec: {:?}", a);
     }
 
     #[test]
-    fn test_push_items_to_list() {
-        let mut a = LinkedList::new();
-        a.push(1);
-        a.push(2);
-        a.push(3);
+    fn foo() {
+        let mut vec = Vector::new();
 
-        // println!("the list\n {:#?}", a);
-        assert_eq!(a.len(), 3);
-    }
-
-    #[test]
-    fn test_into_iter() {
-        let mut a = LinkedList::new();
-        a.push(1);
-        a.push(2);
-        a.push(3);
-
-        for i in a {
-            println!("Item of list: {}", i);
+        let timer = Instant::now();
+        for i in 0..100000 {
+            vec.push(i);
         }
+
+        // assert_eq!(vec.len(), 1000);
+        println!("capacity: {}", vec.capacity());
+        // println!("{:?}", vec);
+        println!("runtime: {:?}", timer.elapsed());
     }
 }
