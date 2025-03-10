@@ -1,6 +1,6 @@
 use std::{
-    alloc::{alloc, dealloc, realloc, Layout},
-    ptr::{self, copy_nonoverlapping},
+    alloc::{alloc, dealloc, Layout},
+    ptr::{self},
 };
 
 pub struct Vector<T> {
@@ -42,7 +42,26 @@ impl<T> Vector<T> {
         if self.len == self.capacity {
             self.realloc();
         }
-        unsafe { self.ptr.add(self.len).write(val); }
+        unsafe {
+            self.ptr.add(self.len).write(val);
+        }
+        self.len += 1;
+    }
+
+    pub fn push_front(&mut self, val: T) {
+        if self.len == self.capacity {
+            self.realloc();
+        }
+
+        if self.len > 0 {
+            unsafe {
+                ptr::copy(self.ptr, self.ptr.add(1), self.len);
+            }
+        }
+
+        unsafe {
+            self.ptr.write(val)
+        }
         self.len += 1;
     }
 
@@ -53,6 +72,23 @@ impl<T> Vector<T> {
             self.len -= 1;
             let res = unsafe { self.ptr.add(self.len).read() };
             Some(res)
+        }
+    }
+
+    pub fn pop_front(&mut self) -> Option<T> {
+        if self.len == 0 {
+            None
+        } else {
+            unsafe {
+                let res = self.ptr.read();
+
+                if self.len > 1 {
+                    ptr::copy(self.ptr.add(1), self.ptr, self.len - 1); 
+                }
+                
+                self.len -= 1;
+                Some(res)
+            }
         }
     }
 
