@@ -1,10 +1,8 @@
-
 #[cfg(test)]
 mod tests {
-    use std::{str::RSplitTerminator, time::Instant};
-
-    use algorighms::collections::vector::Vector;
+    use std::time::Instant;
     use rand::Rng;
+    use algorighms::collections::Vector;
 
     use super::*;
 
@@ -88,6 +86,14 @@ mod tests {
 
     #[test]
     fn test_index() {
-        
+        let mut vec = Vector::new();
+        for i in 0..16 {
+            vec.push(i);
+        }
+        for i in 0..16 {
+            vec[i] *= 2;
+        }
+
+        assert_eq!(vec[5], 10);
     }
 }

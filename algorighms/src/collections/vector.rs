@@ -1,6 +1,6 @@
+use core::panic;
 use std::{
-    alloc::{alloc, dealloc, Layout},
-    ptr::{self},
+    alloc::{alloc, dealloc, Layout}, ops::{Index, IndexMut}, ptr::{self}
 };
 
 pub struct Vector<T> {
@@ -130,6 +130,28 @@ impl<T> Drop for Vector<T> {
                 let layout = Self::vec_layout(self.capacity);
                 dealloc(self.ptr as *mut u8, layout);
             }
+        }
+    }
+}
+
+impl<T> Index<usize> for Vector<T> {
+    type Output = T;
+
+    fn index(&self, index: usize) -> &Self::Output {
+        if index >= self.len() {
+            panic!("index out of bounds");
+        } else {
+            unsafe { &*self.ptr.add(index) }
+        }
+    }
+}
+
+impl<T> IndexMut<usize> for Vector<T> {
+    fn index_mut(&mut self, index: usize) -> &mut Self::Output {
+        if index >= self.len() {
+            panic!("index out of bounds");
+        } else {
+            unsafe { &mut *self.ptr.add(index) }
         }
     }
 }
