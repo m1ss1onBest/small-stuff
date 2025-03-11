@@ -12,9 +12,13 @@ mod tests {
         }
 
         list.print();
+        println!("pop element: {:?}", list.pop_front());
+        println!("pop element: {:?}", list.pop_back());
+        list.print();
 
-        while let Some(i) = list.pop_back() {
-            println!("{}", i)
-        }
+
+        // while let Some(i) = list.pop_front() {
+        //     println!("{}", i)
+        // }
     }
 }

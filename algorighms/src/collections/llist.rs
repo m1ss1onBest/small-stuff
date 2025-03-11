@@ -1,8 +1,9 @@
-use std::{fmt::Display, os::raw};
+use std::fmt::Display;
 
 pub struct LList<T> {
     head: Option<Box<Node<T>>>,
     tail: *mut Node<T>,
+    size: usize,
 }
 
 impl<T> LList<T> {
@@ -10,7 +11,12 @@ impl<T> LList<T> {
         LList {
             head: None,
             tail: std::ptr::null_mut(),
+            size: 0,
         }
+    }
+
+    pub fn size(&self) -> usize {
+        self.size
     }
 
     pub fn push_front(&mut self, value: T) {
@@ -21,7 +27,8 @@ impl<T> LList<T> {
             self.tail = raw_node;
         }
 
-        self.head = Some(new_node)
+        self.head = Some(new_node);
+        self.size += 1;
     }
 
     pub fn push_back(&mut self, value: T) {
@@ -35,14 +42,16 @@ impl<T> LList<T> {
             unsafe { (*self.tail).next = Some(new_node) };
             self.tail = raw_node;
         }
+        self.size += 1;
     }
 
-    fn pop_front(&mut self) -> Option<T> {
+    pub fn pop_front(&mut self) -> Option<T> {
         self.head.take().map(|node| {
             self.head = node.next;
             if self.head.is_none() {
                 self.tail = std::ptr::null_mut()
             }
+            self.size -= 1;
             node.value
         })
     }
@@ -60,9 +69,10 @@ impl<T> LList<T> {
         while current.next.as_ref()?.next.is_some() {
             current = current.next.as_mut()?;
         }
-
         let last = current.next.take()?;
         self.tail = &mut **current as *mut _;
+
+        self.size -= 1;
         Some(last.value)
     }
 

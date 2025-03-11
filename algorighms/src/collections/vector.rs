@@ -99,6 +99,19 @@ impl<T> Vector<T> {
         }
     }
 
+    pub fn search<F>(&self, f: F) -> Option<&T>
+    where 
+        F: Fn(&T) -> bool,
+    {
+        for i in 0..self.len {
+            let item = &self[i];
+            if f(item) {
+                return Some(item)
+            }
+        }
+        None
+    }
+
     fn realloc(&mut self) {
         let new_cap = if self.capacity == 0 { 1 } else { self.capacity * 2 };
         let new_layout = Self::vec_layout(new_cap);
