@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, fmt::Debug};
+use std::{cmp::Ordering, collections::VecDeque, fmt::Debug};
 
 #[derive(Debug, Default)]
 pub struct BSTree<T> {
@@ -63,23 +63,71 @@ impl<T: Ord + Debug> BSTree<T> {
 
     pub fn print_tree(&self) {
         if let Some(ref root) = self.root {
-            Self::print_recursive(root, 0);
+            let tree_str = Self::print_recursive(root, 0);
+            println!("{}", tree_str);
         }
     }
 
-    fn print_recursive(node: &Box<Node<T>>, depth: usize) {
+    fn print_recursive(node: &Box<Node<T>>, depth: usize) -> String {
+        let mut result = String::new();
+
         if let Some(ref left) = node.left {
-            Self::print_recursive(left, depth + 1);
+            result.push_str(&Self::print_recursive(left, depth + 1));
         }
 
-        for _ in 0..depth {
-        print!("    ");
-        }
-        println!("{:?}", node.value);
+        result.push_str(&"\t".repeat(depth));
+        result.push_str(&format!("{:?}\n", node.value));
 
         if let Some(ref right) = node.right {
-            Self::print_recursive(right, depth + 1);
+            result.push_str(&Self::print_recursive(right, depth + 1));
+        }
+
+        result
+    }
+
+    pub fn dfs(&self) -> Option<Vec<&T>> {
+        if let Some(ref node) = self.root {
+            let mut res = Vec::new();
+            Self::dfs_recursive(node, &mut res);
+            Some(res)
+        } else {
+            None
+        }
+    }
+
+    fn dfs_recursive<'a, 'b: 'a>(node: &'b Box<Node<T>>, v: &'a mut Vec<&'b T>) {
+        v.push(&node.value);
+
+        if let Some(ref left) = node.left {
+            Self::dfs_recursive(left, v);
+        }
+
+        if let Some(ref right) = node.right {
+            Self::dfs_recursive(right, v);
+        }
+    }
+
+    pub fn bsf(&self) -> Option<Vec<&T>> {
+        let mut res = Vec::new();
+        let mut queue = VecDeque::new();
+
+        if let Some(ref root) = self.root {
+            queue.push_back(root);
+
+            while let Some(ref node) = queue.pop_front() {
+                res.push(&node.value);
+
+                if let Some(ref left) = node.left {
+                    queue.push_back(left);
+                }
+
+                if let Some(ref right) = node.right {
+                    queue.push_back(right);
+                }
+            }
+            Some(res)
+        } else {
+            None
         }
     }
 }
-
