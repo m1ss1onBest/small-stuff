@@ -3,6 +3,7 @@ use std::ptr::NonNull;
 pub mod collections;
 pub mod trees;
 pub mod test_structs;
+pub mod sorting;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
