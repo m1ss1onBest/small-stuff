@@ -1,5 +1,8 @@
+use std::ptr::NonNull;
+
 pub mod collections;
 pub mod trees;
+pub mod test_structs;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right

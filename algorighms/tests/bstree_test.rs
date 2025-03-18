@@ -1,3 +1,5 @@
+use algorighms::trees::BSTree;
+
 #[cfg(test)]
 mod bstree_tests {
     use algorighms::trees::BSTree;
@@ -47,4 +49,11 @@ mod bstree_tests {
 
         println!("bfs: {:?}", tree.bsf())
     }
+}
+
+
+#[test]
+fn depth_test() {
+    let tree = BSTree::from_vec(vec![5, 7, 1, 0, 3, 8, 2]);
+    println!("{:?}", tree.dfs());
 }
