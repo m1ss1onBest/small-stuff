@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Write};
 
 pub mod collections;
-pub mod trees;
+pub mod unordered;
 pub mod test_structs;
 pub mod sorting;
 
