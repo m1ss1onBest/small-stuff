@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod avl_tests {
-    use algorighms::trees::AvlTree;
+    use algorighms::unordered::AvlTree;
 
     use super::*;
 

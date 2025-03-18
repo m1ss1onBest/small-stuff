@@ -1,8 +1,8 @@
-use algorighms::trees::BSTree;
+use algorighms::unordered::BSTree;
 
 #[cfg(test)]
 mod bstree_tests {
-    use algorighms::trees::BSTree;
+    use algorighms::unordered::BSTree;
 
     use super::*;
 
