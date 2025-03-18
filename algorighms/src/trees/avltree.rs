@@ -1,5 +1,5 @@
 use core::panic;
-use std::cmp::{max, Ordering};
+use std::{cmp::{max, Ordering}, collections::VecDeque};
 
 
 type Link<T> = Option<Box<Node<T>>>;
@@ -22,6 +22,14 @@ impl<T: Ord + Clone> AvlTree<T> {
         AvlTree { root: None }
     }
 
+    pub fn from_vec(v: Vec<T>) -> Self {
+        let mut tree = AvlTree::new();
+        for i in v {
+            tree.insert(i);
+        }
+        tree
+    }
+
     pub fn insert(&mut self, value: T) {
         self.root = Self::insert_recursive(self.root.take(), value);
     }
@@ -32,6 +40,30 @@ impl<T: Ord + Clone> AvlTree<T> {
 
     pub fn remove(&mut self, value: T) {
         self.root = Self::delete(self.root.take(), value);
+    }
+
+    pub fn bfs(&self) -> Option<Vec<&T>> {
+        let mut res = Vec::new();
+        let mut queue = VecDeque::new();
+
+        if let Some(ref root) = self.root {
+            queue.push_back(root);
+
+            while let Some(ref node ) = queue.pop_front() {
+                res.push(&node.value);
+
+                if let Some(ref left) = node.left {
+                    queue.push_back(&left);
+                }
+
+                if let Some(ref right) = node.right {
+                    queue.push_back(&right);
+                }
+            }
+            Some(res)
+        } else {
+            None
+        }
     }
 
     fn height(node: &Link<T>) -> i32 {
