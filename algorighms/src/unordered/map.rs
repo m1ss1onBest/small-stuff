@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, mem};
+use std::{borrow::{Borrow, BorrowMut}, cmp::{self, Ordering}, mem};
 
 type Link<K, V> = Option<Box<Node<K, V>>>;
 
@@ -62,10 +62,18 @@ impl<K: Ord, V> Map<K, V> {
             None
         }
     }
+
+    pub fn get(&self, key: K) -> Option<&V> {
+        self.root.as_ref()?.get(key)
+    }
+
+    pub fn get_mut(&mut self, key: K) -> Option<&mut V> {
+        self.root.as_mut()?.get_mut(key)
+    }
 }
 
 impl<K: Ord, V> Node<K, V> {
-    pub fn new(key: K, value: V) -> Link<K, V> {
+    fn new(key: K, value: V) -> Link<K, V> {
         Some(Box::new(Node {
             key,
             value,
@@ -75,7 +83,23 @@ impl<K: Ord, V> Node<K, V> {
         }))
     }
 
-    pub fn insert(&mut self, key: K, value: V) -> Option<V> {
+    fn get(&self, key: K) -> Option<&V> {
+        match key.cmp(&self.key) {
+            Ordering::Less => self.left.as_ref()?.get(key),
+            Ordering::Greater => self.right.as_ref()?.get(key),
+            Ordering::Equal => Some(&self.value),
+        }
+    }
+
+    fn get_mut(&mut self, key: K) -> Option<&mut V> {
+        match key.cmp(&self.key) {
+            Ordering::Less => self.left.as_mut()?.get_mut(key),
+            Ordering::Greater => self.right.as_mut()?.get_mut(key),
+            Ordering::Equal => Some(&mut self.value),
+        }
+    }
+
+    fn insert(&mut self, key: K, value: V) -> Option<V> {
         match key.cmp(&self.key) {
             Ordering::Less => self.put(key, value, |n| &mut n.left),
             Ordering::Greater => self.put(key, value, |n| &mut n.right),
@@ -83,11 +107,11 @@ impl<K: Ord, V> Node<K, V> {
         }
     }
 
-    //helper function to avoid code duplication
-    fn put<F>(&mut self, key: K, value: V, mut f: F) -> Option<V>
+    // helper function to avoid code duplication
+    fn put<F>(&mut self, key: K, value: V, f: F) -> Option<V>
     where
-        F: FnMut(&mut Node<K, V>) -> &mut Link<K, V>,
-   {
+        F: FnOnce(&mut Node<K, V>) -> &mut Link<K, V>,
+    {
         let target = f(self);
 
         if let Some(ref mut node) = target {
