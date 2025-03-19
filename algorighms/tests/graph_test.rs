@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod graph_tests {
-    use algorighms::unordered::{graph, Graph};
+    use algorighms::unordered::Graph;
 
     fn get_graph() -> Graph {
         let mut graph = Graph::new(6);
