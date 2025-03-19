@@ -1,4 +1,9 @@
-use std::{collections::VecDeque, fmt::Write, vec};
+use std::{
+    cmp::Reverse,
+    collections::{BinaryHeap, VecDeque},
+    fmt::Write,
+    vec,
+};
 
 pub struct Graph {
     inner: Vec<Vec<(i32, i32)>>,
@@ -72,5 +77,31 @@ impl Graph {
             }
         }
         res
+    }
+
+    pub fn dijkstra(&self, start: i32) -> Vec<i32> {
+        let n = self.len();
+        let mut dist = vec![i32::MAX; n];
+        let mut heap = BinaryHeap::new();
+
+        dist[start as usize] = 0;
+        // (distance, node)
+        heap.push(Reverse((0, start))); 
+
+        while let Some(Reverse((cost, node))) = heap.pop() {
+            if cost > dist[node as usize] {
+                continue;
+            }
+
+            for &(neighbor, weight) in &self.inner[node as usize] {
+                let next_cost = cost + weight;
+                if next_cost < dist[neighbor as usize] {
+                    dist[neighbor as usize] = next_cost;
+                    heap.push(Reverse((next_cost, neighbor)));
+                }
+            }
+        }
+
+        dist
     }
 }

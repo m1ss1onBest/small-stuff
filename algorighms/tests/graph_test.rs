@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod graph_tests {
-    use algorighms::unordered::Graph;
+    use algorighms::unordered::{graph, Graph};
 
     fn get_graph() -> Graph {
         let mut graph = Graph::new(6);
@@ -39,5 +39,13 @@ mod graph_tests {
     fn graph_bfs_test() {
         let graph = get_graph();
         println!("bfs: {:?}", graph.bfs(0))
+    }
+
+    #[test]
+    fn graph_dijkstra_test() {
+        let graph = get_graph();
+        let dijkstra = graph.dijkstra(0);
+        println!("{:?}", dijkstra);
+        // println!("{:?}\n{:?}", pairs, distances);
     }
 }
