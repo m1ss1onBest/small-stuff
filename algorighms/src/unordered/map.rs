@@ -1,4 +1,4 @@
-use std::{borrow::{Borrow, BorrowMut}, cmp::{self, Ordering}, mem};
+use std::{cmp::Ordering, mem, ops::Index};
 
 type Link<K, V> = Option<Box<Node<K, V>>>;
 
@@ -23,6 +23,21 @@ enum Color {
     Black
 }
 
+pub enum Entry<'a, K, V> {
+    Occupied(OccupiedEntry<'a, K, V>),
+    Vacant(VacantEntry<'a, K, V>),
+}
+
+struct OccupiedEntry<'a, K, V> {
+    node: &'a mut Node<K, V>,
+}
+
+struct VacantEntry<'a, K, V> {
+    key: K,
+    parent: &'a mut Link<K, V>,
+}
+
+#[allow(unused)]
 impl Color {
     pub fn is_red(&self) -> bool {
         matches!(*self, Color::Red)
@@ -69,6 +84,29 @@ impl<K: Ord, V> Map<K, V> {
 
     pub fn get_mut(&mut self, key: K) -> Option<&mut V> {
         self.root.as_mut()?.get_mut(key)
+    }
+
+    pub fn entry(&mut self, key: K) -> Entry<K, V> {
+        let mut current = &mut self.root;
+
+        while let Some(ref mut node) = current {
+            match key.cmp(&node.key) {
+                Ordering::Less => current = &mut node.left,
+                Ordering::Greater => current = &mut node.right,
+                Ordering::Equal => {
+                    return Entry::Occupied(OccupiedEntry { node })
+                }
+            }
+        }
+        Entry::Vacant(VacantEntry { key, parent: current })
+    }
+}
+
+impl<K: Ord, V> Index<K> for Map<K, V> {
+    type Output = V;
+
+    fn index(&self, index: K) -> &Self::Output {
+        self.get(index).expect("entry not found by key")
     }
 }
 
@@ -120,5 +158,36 @@ impl<K: Ord, V> Node<K, V> {
             *target = Node::new(key, value);
             None
         }
+    }
+}
+
+impl <'a, K: Ord, V> Entry<'a, K, V> {
+    pub fn or_insert(self, default: V) -> &'a mut V {
+        match self {
+            Entry::Occupied(entry) => entry.into_mut(),
+            Entry::Vacant(entry) => entry.insert(default),
+        }
+    }
+}
+
+#[allow(unused)]
+impl<'a, K: Ord, V> OccupiedEntry<'a, K, V> {
+    pub fn get(&self) -> &V {
+        &self.node.value
+    }
+
+    pub fn get_mut(&mut self) -> &mut V {
+        &mut self.node.value
+    }
+
+    pub fn into_mut(self) -> &'a mut V {
+        &mut self.node.value
+    }
+}
+
+impl<'a, K: Ord, V> VacantEntry<'a, K, V> {
+    pub fn insert(self, value: V) -> &'a mut V {
+        *self.parent = Node::new(self.key, value);
+        &mut self.parent.as_mut().unwrap().value
     }
 }

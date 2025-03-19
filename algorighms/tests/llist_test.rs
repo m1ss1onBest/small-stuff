@@ -2,8 +2,6 @@
 mod tests {
     use algorighms::collections::LList;
 
-    use super::*;
-
     #[test]
     fn test_list() {
         let mut list = LList::new();

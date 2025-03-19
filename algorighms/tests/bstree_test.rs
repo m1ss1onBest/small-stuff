@@ -4,8 +4,6 @@ use algorighms::unordered::BSTree;
 mod bstree_tests {
     use algorighms::unordered::BSTree;
 
-    use super::*;
-
     #[test]
     fn test_print() {
         let mut tree = BSTree::new();

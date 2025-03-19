@@ -1,17 +1,6 @@
 use std::{cmp::Ordering, collections::VecDeque, fmt::Debug};
 
 /// An implementation of Binary Search Tree
-/// 
-/// ```
-/// use algorithms::trees::BSTree;
-/// 
-/// let mut tree = BSTree::new();
-/// tree.insert(2);
-/// tree.insert(1);
-/// tree.insert(3);
-/// assert_eq(tree.search(1), true);
-/// assert_eq(tree.search(4), false);
-/// ```
 #[derive(Debug, Default)]
 pub struct BSTree<T> {
     root: Option<Box<Node<T>>>,
@@ -31,12 +20,6 @@ impl<T: Ord + Debug> BSTree<T> {
     }
 
     /// Makes a `BSTree` from a vector
-    /// 
-    /// ```
-    /// let tree = BSTree::from_vec(vec![1, 4, 2, 6, 5])
-    /// assert_eq!(tree.search(5), true);
-    /// assert_eq!(tree.search(9), false);
-    /// ```
     pub fn from_vec(arr: Vec<T>) -> Self {
         let mut tree = BSTree::new();
         for i in arr {
@@ -46,13 +29,6 @@ impl<T: Ord + Debug> BSTree<T> {
     }
 
     /// Inserts an element to the tree
-    /// 
-    /// ```
-    /// let mut tree = BSTree::new();
-    /// tree.insert(3);
-    /// 
-    /// assert_eq(tree.search(3), true);
-    /// ```
     pub fn insert(&mut self, value: T) {
         let new_node = Box::new(Node {
             value,
@@ -67,11 +43,6 @@ impl<T: Ord + Debug> BSTree<T> {
     }
 
     /// Checks, if the element exists in the tree
-    /// 
-    /// ```
-    /// let tree = BSTree::from_vec(vec![2, 3, 4, 1, 5]);
-    /// assert_eq!(tree.search(1), true);
-    /// ```
     pub fn search(&self, value: T) -> bool {
         Self::search_recursive(&self.root, value)
     }

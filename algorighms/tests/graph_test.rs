@@ -2,8 +2,6 @@
 mod graph_tests {
     use algorighms::unordered::Graph;
 
-    use super::*;
-
     fn get_graph() -> Graph {
         let mut graph = Graph::new(6);
 

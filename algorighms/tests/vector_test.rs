@@ -1,10 +1,8 @@
 #[cfg(test)]
 mod tests {
-    use std::{time::Instant, vec};
+    use std::time::Instant;
     use rand::Rng;
     use algorighms::collections::Vector;
-
-    use super::*;
 
     #[test]
     fn test_new() {
@@ -100,7 +98,7 @@ mod tests {
     #[test]
     fn quicksort() {
         fn sort(v: &mut Vector<i32>) {
-            for i in 0..v.len() {
+            for _ in 0..v.len() {
 
             }
         }

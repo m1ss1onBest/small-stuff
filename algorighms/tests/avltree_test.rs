@@ -2,8 +2,6 @@
 mod avl_tests {
     use algorighms::unordered::AvlTree;
 
-    use super::*;
-
     #[test]
     fn test_avl_create() {
         let tree = AvlTree::from_vec(vec![1, 6, 3, 7, 2, 4, 9, 11, 12, 13, 14]);

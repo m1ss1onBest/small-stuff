@@ -2,8 +2,6 @@
 mod map_tests {
     use algorighms::unordered::Map;
 
-    use super::*;
-
     fn get_map() -> Map<i32, &'static str> {
         let mut map = Map::new();
  
@@ -31,4 +29,20 @@ mod map_tests {
         println!("map by index 2 is {:?}", map.get(2));
     }
 
+    #[test]
+    fn map_entry_or_insert_test() {
+        let mut map = Map::new();
+        map.insert("john", 1);
+        map.insert("kate", 2);
+        map.insert("vovan", 3);
+        
+        *map.entry("kate").or_insert(11) += 1000;
+        *map.entry("ivan").or_insert(11) += 1000;
+    }
+
+    #[test]
+    fn map_index_test() {
+        let map = get_map();
+        assert_eq!(map[1], "tim");
+    }
 }

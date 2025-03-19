@@ -1,5 +1,3 @@
-use std::fmt::{Debug, Write};
-
 pub mod collections;
 pub mod unordered;
 pub mod test_structs;
