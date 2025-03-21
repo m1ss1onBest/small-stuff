@@ -1,27 +1,19 @@
 #[cfg(test)]
 mod search_tests {
-    use std::{iter::Inspect, time::Instant, vec};
+    use std::time::Instant;
 
     use algorighms::search::{binary_search, linear_search};
 
-    use super::*;
-
+    const elem: &i32 = &10000000;
     fn get_arr() -> Vec<i32> {
         (0..100000000).collect()
-    }
-
-    fn value_to_find() -> &'static i32 {
-        &100000000
     }
 
     #[test]
     fn linear_search_test() {
         let arr = get_arr();
         let runtime = Instant::now();
-
-        if let Some(val) = linear_search(&arr, value_to_find()) {
-            // println!("linear: {}", val);
-        }
+        let _ = linear_search(&arr, elem);
         println!("binary search runtime: {:?}", runtime.elapsed());
     }
 
@@ -29,10 +21,7 @@ mod search_tests {
     fn test_binary_search() {
         let arr = get_arr();
         let runtime = Instant::now();
-
-        if let Some(val) = binary_search(&arr, value_to_find()) {
-            println!("binary: {}", val);
-        }
+        let _ = binary_search(&arr, elem);
         println!("linear search runtime: {:?}", runtime.elapsed());
     }
 }
