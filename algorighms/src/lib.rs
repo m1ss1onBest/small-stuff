@@ -1,6 +1,6 @@
 pub mod collections;
 pub mod unordered;
-pub mod test_structs;
+pub mod structs;
 pub mod sorting;
 pub mod search;
 
