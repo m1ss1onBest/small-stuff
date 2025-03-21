@@ -2,6 +2,7 @@ pub mod collections;
 pub mod unordered;
 pub mod test_structs;
 pub mod sorting;
+pub mod search;
 
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
