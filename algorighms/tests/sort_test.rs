@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod sort_tests {
-    use algorighms::sorting::{bubble_sort, insertion_sort, selection_sort};
+    use algorighms::sorting::{bubble_sort, insertion_sort, merge_sort, quick_sort, selection_sort};
 
     fn get_unsorted() -> [i32; 10] {
         [1, 5, 3, -3, 6, 2, 4, -1, 0, -2]
@@ -24,6 +24,20 @@ mod sort_tests {
     fn selection_sort_test() {
         let mut arr = get_unsorted();
         selection_sort(&mut arr);
+        println!("{:?}", arr);
+    }
+
+    #[test]
+    fn quick_sort_test() {
+        let mut arr = get_unsorted();
+        quick_sort(&mut arr);
+        println!("{:?}", arr);
+    }
+
+    #[test]
+    fn merge_sort_test() {
+        let mut arr = get_unsorted();
+        merge_sort(&mut arr);
         println!("{:?}", arr);
     }
 }
