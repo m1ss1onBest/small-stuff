@@ -2,9 +2,9 @@
 mod search_tests {
     use std::time::Instant;
 
-    use algorighms::search::{binary_search, linear_search};
+    use algorighms::search::*;
 
-    const elem: &i32 = &10000000;
+    const ELEM: &i32 = &10000000;
     fn get_arr() -> Vec<i32> {
         (0..100000000).collect()
     }
@@ -13,15 +13,23 @@ mod search_tests {
     fn linear_search_test() {
         let arr = get_arr();
         let runtime = Instant::now();
-        let _ = linear_search(&arr, elem);
-        println!("binary search runtime: {:?}", runtime.elapsed());
+        let a = linear_search(&arr, ELEM);
+        println!("linear search runtime: {:?}, {a}", runtime.elapsed());
     }
 
     #[test]
-    fn test_binary_search() {
+    fn binary_search_test() {
         let arr = get_arr();
         let runtime = Instant::now();
-        let _ = binary_search(&arr, elem);
-        println!("linear search runtime: {:?}", runtime.elapsed());
+        let a = binary_search(&arr, ELEM);
+        println!("binary search runtime: {:?}, {a}", runtime.elapsed());
+    }
+
+    #[test]
+    fn interpolation_search_test() {
+        let slice = get_arr();
+        let a = interpolation_search(&slice, 500);
+        let runtime = Instant::now();
+        println!("Interpolation search runtime: {:?}, {a:?}", runtime.elapsed());
     }
 }

@@ -12,6 +12,7 @@ pub struct Map<K, V> {
 pub struct Node<K, V> {
     key: K,
     value: V,
+    #[allow(dead_code)]
     color: Color,
     left: Link<K, V>,
     right: Link<K, V>,
@@ -23,6 +24,7 @@ enum Color {
     Black
 }
 
+#[allow(private_interfaces)]
 pub enum Entry<'a, K, V> {
     Occupied(OccupiedEntry<'a, K, V>),
     Vacant(VacantEntry<'a, K, V>),
