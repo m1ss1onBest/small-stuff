@@ -1,8 +1,5 @@
 use std::{
-    cmp::Reverse,
-    collections::{BinaryHeap, VecDeque},
-    fmt::Write,
-    vec,
+    cmp::Reverse, collections::{BinaryHeap, VecDeque}, fmt::Write, vec
 };
 
 pub struct Graph {
@@ -101,7 +98,40 @@ impl Graph {
                 }
             }
         }
-
         dist
+    }
+
+
+    pub fn bellman_ford(&self, start: i32) -> Option<Vec<i32>> {
+        let n = self.len();
+        let mut dist = vec![i32::MAX; n];
+        dist[start as usize] = 0;
+
+        for _ in 0..n - 1 {
+            let mut updated = false;
+
+            for u in 0..n {
+                for &(v, weight) in &self.inner[u] {
+                    if dist[u] != i32::MAX && dist[u] + weight < dist[v as usize] {
+                        dist[v as usize] = dist[u] + weight;
+                        updated = true;
+                    }
+                }
+            }
+
+            if !updated {
+                break;
+            }
+        }
+
+        for u in 0..n {
+            for &(v, weight) in &self.inner[u] {
+                if dist[u] != i32::MAX && dist[u] + weight < dist[v as usize] {
+                    return None;
+                }
+            }
+        }
+
+        Some(dist)
     }
 }
